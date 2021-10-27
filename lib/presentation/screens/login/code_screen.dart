@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:customer/data/models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
