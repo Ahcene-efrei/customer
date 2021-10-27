@@ -15,6 +15,7 @@ const List categories = [
   {"img": "lib/assets/images/essentials.svg", "name": "Specials"},
   {"img": "lib/assets/images/fruit.svg", "name": "Soins"},
   {"img": "lib/assets/images/alcohols.svg", "name": "Services"},
+
 ];
 const List firstMenu = [
   {
