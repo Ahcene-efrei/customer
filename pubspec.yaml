@@ -31,6 +31,7 @@ dependencies:
     sdk: flutter
 
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -39,12 +40,37 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+
+
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^1.0.0
+
+  cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^9.1.0
+  flutter_svg: ^0.22.0
+  slider_button: ^1.0.0
+  dio: ^4.0.0
+  equatable: ^2.0.3
+  html_character_entities: ^1.0.0+1
+  bloc: ^7.2.1
+  google_fonts: ^2.1.0
+  intl_phone_number_input: ^0.7.0+2
+  flutter_verification_code: ^1.1.0
+  http: ^0.13.4
+  shared_preferences: ^2.0.8
+  carousel_slider: ^2.2.1
+  animate_do: ^1.7.3
+  infinite_scroll_pagination: ^3.1.0
+  flutter_rating_bar: ^4.0.0
+  flutter_secure_storage: ^4.2.1
+  table_calendar: ^3.0.2
+  #openapi:
+  #  git:
+  #    url: git@github.com:petit-chat/labonnecoupe-api-client.git
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
