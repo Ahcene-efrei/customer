@@ -53,11 +53,11 @@ dev_dependencies:
   font_awesome_flutter: ^9.1.0
   flutter_svg: ^0.22.0
   slider_button: ^1.0.0
-#  dio: ^4.0.0
+  dio: ^4.0.0
   equatable: ^2.0.3
   html_character_entities: ^1.0.0+1
   bloc: ^7.2.1
-#  google_fonts: ^2.1.0
+  google_fonts: ^2.1.0
   intl_phone_number_input: ^0.7.0+2
   flutter_verification_code: ^1.1.0
 #  http: ^0.13.4
@@ -68,10 +68,10 @@ dev_dependencies:
   flutter_rating_bar: ^4.0.0
   flutter_secure_storage: ^4.2.1
   table_calendar: ^3.0.2
-
-  openapi:
-    git:
-      url: git@github.com:petit-chat/labonnecoupe-api-client.git
+#
+#  openapi:
+#    git:
+#      url: git@github.com:petit-chat/labonnecoupe-api-client.git
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
