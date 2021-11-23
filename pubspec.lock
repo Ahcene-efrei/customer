@@ -266,7 +266,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: cd43c28db908321be34fce5e68e4d5955e5729d7
+      resolved-ref: ac9a5177678dd2cf581e8c49c5ca80510196e8c5
       url: "git@github.com:petit-chat/labonnecoupe-api-client.git"
     source: git
     version: "1.0.0"

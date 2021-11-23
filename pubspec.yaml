@@ -68,6 +68,7 @@ dev_dependencies:
   flutter_rating_bar: ^4.0.0
   flutter_secure_storage: ^4.2.1
   table_calendar: ^3.0.2
+
   openapi:
     git:
       url: git@github.com:petit-chat/labonnecoupe-api-client.git

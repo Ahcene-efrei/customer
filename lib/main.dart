@@ -9,7 +9,7 @@ void main() {
     debugShowCheckedModeBanner: false,
     routes: {
       // //"/": (context) => const LaunchScreen(),
-      "/home": (context) => const HomePage(),
+      "/home": (context) =>  HomePage(),
       // "/login": (context) => const LoginPage(),
       // "/homepage": (context) => const MyHomePage()
     },

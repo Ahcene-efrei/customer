@@ -1,9 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:openapi/api.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  // final api = CustomerApi();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,9 @@ class HomePage extends StatelessWidget {
                         padding: const EdgeInsets.all(15)
                       ),
                       onPressed: (){
-                        Navigator.pushNamed(context, "/login");
+                        // Navigator.pushNamed(context, "/login");
+
+
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
