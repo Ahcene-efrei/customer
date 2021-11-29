@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:customer/components/button/button.dart';
+import 'package:customer/styles/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 // import 'package:http/http.dart' as http;
@@ -21,22 +23,36 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            'Connexion',
+            style: TextStyle(
+              color: Black
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation : 1,
+        shadowColor: Colors.white70,
+        automaticallyImplyLeading: false,
+      ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.fromLTRB(25.0, 40.0, 25.0, 20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Column(
                 children: [
                   Text(
                     "Saisissez votre numéro de téléphone portable",
                     style: TextStyle(
-                      fontSize: 24
+                      fontSize: 18
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0,10),
+                    padding: const EdgeInsets.fromLTRB(0, 25, 0,15),
                     child: InternationalPhoneNumberInput(
                       onInputChanged: (PhoneNumber number) {
                         currentPhoneNumber = number.phoneNumber!;
@@ -63,64 +79,38 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     "Si vous continuez, vous recevrez peut-être un SMS de vérification. Des frais de messagerie SMS et de transfert de données peuvent s'appliquer.",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       color: Colors.grey[600]
                     ),
                   ),
 
                 ],
               ),
+              SizedBox(
+                height: 40,
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0,0,0,50),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.black, // This is what you need!
-                      padding: const EdgeInsets.all(15)
-                  ),
-                  onPressed: (){
-                    if(isValid){
-                      //Navigator.pushNamed(context, "/code");
-
-                      sendPhoneNumber(currentPhoneNumber, context);
-                    }else{
-                    }
-
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        "Continuer",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      Icon(Icons.arrow_forward_ios)
-                    ],
-                  ),
-                ),
+                child: Button(text: "Continuer", callBack: ()=>sendPhoneNumber(isValid, currentPhoneNumber, context))
               ),
             ],
           ),
         ),
-
       ),
     );
   }
 }
 
-Future<void> sendPhoneNumber(String phoneNumber, BuildContext context) async {
-  print("test");
-  //var url = Uri.parse('https://labonnecoupe.azurewebsites.net/api/Customer/SendVerificationToken');
-  //var response = await http.post(url, body: {'phoneNumber': phoneNumber});
-  print('numéros de tél: ${phoneNumber}');
-  //print('Response status: ${response.statusCode}');
-  //print('Response body: ${response.body}');
-
-  Navigator.push(
+Future<void> sendPhoneNumber(bool isValid, String phoneNumber, BuildContext context) async {
+  print(isValid);
+  if(isValid){
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CodePage(phoneNumber: phoneNumber),
-    ));
+      )
+    );
+  }
+
 
 }

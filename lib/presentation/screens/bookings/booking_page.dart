@@ -19,7 +19,7 @@ class BookingPage extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              product.name,
+              product.price.toString(),
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold

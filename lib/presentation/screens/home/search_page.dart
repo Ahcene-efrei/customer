@@ -129,7 +129,7 @@ class _SearchPageState extends State<SearchPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.firstname,
+                          item.firstname ?? '',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 15,

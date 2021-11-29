@@ -16,10 +16,10 @@ class HairdresserProfil extends StatefulWidget {
 
 class _HairdresserProfilState extends State<HairdresserProfil> {
   List<Product> listProducts = [
-    Product(name: "coupe homme", price: 11.50),
-    Product(name: "coupe femme", price: 33.99),
-    Product(name: "coupe simple", price: 10.99),
-    Product(name: "coupe complexe", price: 25.00),
+    Product(price: 11.50),
+    Product(price: 33.99),
+    Product(price: 10.99),
+    Product(price: 25.00),
   ];
   var listTest = [1,2,3,4];
   @override
@@ -102,7 +102,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.currentHairdresser.firstname,
+                    widget.currentHairdresser.firstname ?? '',
                     style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
@@ -285,7 +285,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        listProducts[index].name,
+                                        listProducts[index].price.toString(),
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: 18,

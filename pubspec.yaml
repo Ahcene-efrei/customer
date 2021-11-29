@@ -60,7 +60,7 @@ dev_dependencies:
   google_fonts: ^2.1.0
   intl_phone_number_input: ^0.7.0+2
   flutter_verification_code: ^1.1.0
-#  http: ^0.13.4
+  http: ^0.13.4
   shared_preferences: ^2.0.8
   carousel_slider: ^2.2.1
   animate_do: ^1.7.3
