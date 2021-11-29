@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:customer/data/models/hairdresser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:customer/data/json/home_page_json.dart';
-import 'package:customer/data/models/Hairdresser.dart';
+import 'package:customer/data/models/hairdresser.dart';
 import 'package:customer/presentation/screens/hairdresser/HairdresserProfil.dart';
 
 
@@ -129,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.firstname,
+                          item.getFirstName(),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 15,

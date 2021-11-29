@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:openapi/api.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);

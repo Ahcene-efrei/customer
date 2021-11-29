@@ -48,6 +48,10 @@ class Hairdresser {
     addresses = jsonData["addresses"];
   }
 
+  getFirstName(){
+    return this.firstname;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'phoneNumber': phoneNumber,

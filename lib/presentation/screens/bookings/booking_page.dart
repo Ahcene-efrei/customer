@@ -1,6 +1,7 @@
+import 'package:customer/data/models/product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/data/models/Product.dart';
+import 'package:customer/data/models/product.dart';
 
 class BookingPage extends StatelessWidget {
   final Product product;
@@ -19,7 +20,7 @@ class BookingPage extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              product.name,
+              product.getName(),
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold

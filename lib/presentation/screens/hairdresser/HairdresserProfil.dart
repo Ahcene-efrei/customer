@@ -1,9 +1,9 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:customer/data/json/home_page_json.dart';
-import 'package:customer/data/models/Hairdresser.dart';
+import 'package:customer/data/models/hairdresser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:customer/data/models/Product.dart';
+import 'package:customer/data/models/product.dart';
 import 'package:customer/presentation/screens/bookings/booking_page.dart';
 
 class HairdresserProfil extends StatefulWidget {
@@ -102,7 +102,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.currentHairdresser.firstname,
+                    widget.currentHairdresser.getFirstName(),
                     style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
@@ -285,7 +285,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        listProducts[index].name,
+                                        listProducts[index].getName(),
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: 18,
