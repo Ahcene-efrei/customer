@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:customer/presentation/screens/home/MyImageView.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +7,8 @@ import 'package:customer/components/slider/CustomSlider.dart';
 import 'package:customer/data/json/home_page_json.dart';
 import 'package:customer/styles/theme.dart';
 import 'package:customer/presentation/screens/home/search_page.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,28 +28,75 @@ class _HomePageState extends State<HomePage> {
 
   Widget getBody(){
     var size = MediaQuery.of(context).size;
+    int currentPos = 0;
+    List<String> listPaths = [
+      "lib/assets/images/barber.jpg",
+      "lib/assets/images/slide_1.jpg",
+      "lib/assets/images/slide_2.jpg"
+    ];
     return ListView(
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
-            SizedBox(
-              height: 15,
-            ),
-            getLocationWidget(size),
-            SizedBox(
-              height: 15,
-            ),
-            selectTypeOfLocation(),
-            SizedBox(
-              height: 15,
-            ),
-            CustomSliderWidget(
-              items: [
-                "lib/assets/images/slider2.png",
-                "lib/assets/images/slider1.png",
-                "lib/assets/images/slider3.png"
-              ],
+            ColoredBox(
+              color: Colors.black,
+              child: Column(
+                  children: [
+                    SizedBox(
+                      height: 15,
+                    ),
+                    getLocationWidget(size),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    selectTypeOfLocation(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: 250,
+                        aspectRatio: 16/9,
+                        initialPage: 0,
+                        enableInfiniteScroll: true,
+                        reverse: false,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            currentPos = index;
+                          });
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                      items: listPaths.map((i) {
+                        return MyImageView(i);
+                      }).toList(),
+                  ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: listPaths.map((url) {
+                        int index = listPaths.indexOf(url);
+                        return Container(
+                          width: 8.0,
+                          height: 8.0,
+                          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentPos == index
+                                ? Color.fromRGBO(255, 255, 255, 0.9)
+                                : Color.fromRGBO(222, 215, 215, 0.4),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ]
+              ),
             ),
             getCategories(size),
             SizedBox(
@@ -83,7 +133,7 @@ class _HomePageState extends State<HomePage> {
             height: 45,
             width: size.width - 70,
             decoration: BoxDecoration(
-                color: Colors.black12,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(30)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                       SvgPicture.asset(
                         "lib/assets/images/pin_icon.svg",
                         width: 20,
-                        color: Colors.black,
+                        color: Colors.white,
                       ),
                       SizedBox(
                         width: 5,
@@ -146,6 +196,7 @@ class _HomePageState extends State<HomePage> {
             child: IconButton(
               icon: SvgPicture.asset(
                 "lib/assets/images/search_icon.svg",
+                color: Colors.white,
               ),
               onPressed: ()=>{
                 Navigator.push(
@@ -182,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                 ? ElasticIn(
               child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(30)),
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -194,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: Colors.white),
+                            color: Colors.black),
                       )
                     ],
                   ),
@@ -212,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       TypeOfLocation[index],
-                      style: customContent,
+                      style: customContentWhite,
                     )
                   ],
                 ),
