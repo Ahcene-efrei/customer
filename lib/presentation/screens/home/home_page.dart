@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:customer/components/home/barber_cycle.dart';
 import 'package:customer/presentation/screens/home/MyImageView.dart';
+import 'package:customer/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -230,7 +232,7 @@ class _HomePageState extends State<HomePage> {
               });
             },
             child: selectedTypeOfLocation == index
-                ? ElasticIn(
+            ? ElasticIn(
               child: Container(
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -252,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             )
-                : Container(
+            : Container(
               decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(30)),
@@ -338,9 +340,15 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 15,
             ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child:
+                  Row(
+                    children: listOfHairdresser.map((hairdresser) => BarberCycle(hairdresser)).toList(),
+                  ),
+            ),
             Stack(
               children: [
-
                 GestureDetector(
                   onTap: () {
                     //Navigator.push(
