@@ -17,13 +17,13 @@ class BarberCycle extends StatelessWidget{
       child: Column(
         children: [
           CircleAvatar(
-            radius: 22,
+            radius: 40,
             child: ClipOval(
               child: Image.asset(
                 "lib/assets/images/barber.jpg",
                 fit: BoxFit.cover,
-                width: 40,
-                height: 40,
+                width: 80,
+                height: 80,
               ),
             ),
           ),
@@ -40,7 +40,7 @@ class BarberCycle extends StatelessWidget{
               Icon(
                 Icons.star,
                 color: AppColors.yellowStar,
-                size: 15,
+                size: iconSizeDefault,
               ),SizedBox(
                 width: 2,
               ),

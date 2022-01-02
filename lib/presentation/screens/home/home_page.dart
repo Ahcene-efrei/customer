@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:customer/components/home/barber_cycle.dart';
+import 'package:customer/components/home/prestation.dart';
 import 'package:customer/presentation/screens/home/MyImageView.dart';
 import 'package:customer/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -287,37 +288,49 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              bottom: 15,
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                margin: EdgeInsets.only(left: 30),
-                child: Row(
-                    children: List.generate(categories.length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 35),
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              categories[index]['img'],
-                              width: 40,
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              categories[index]['name'],
-                              style: customParagraph,
-                            )
-                          ],
-                        ),
-                      );
-                    })),
-              ),
-            ),
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Prestations",
+                      style: customTitle,
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "YourRoute");
+                      },
+                      child: Row(
+                        children: [
+                          Text("Voir plus",
+                          style: textprimary),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.primary,
+                            size: iconSizeDefault,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+
+                SizedBox(
+                  height: 15,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    child: Row(
+                      children: categories.map((prestation) => Prestation(prestation)).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            )
           ),
         ),
       ),
@@ -328,155 +341,178 @@ class _HomePageState extends State<HomePage> {
   Container getADomicile(size){
     return Container(
       width: size.width,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Les meilleurs coiffeurs à proximité",
-              style: customTitle,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child:
+      child: Column(
+        children: [
+          Padding(
+          padding: const EdgeInsets.only(left: 13),
+          child:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Les meilleurs coiffeurs proches",
+                style: customTitle,
+              ),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "YourRoute");
+                  },
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.primary,
+                    size: iconSizeDefault,
+                  )
+              )
+            ],
+          ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child:
                   Row(
                     children: listOfHairdresser.map((hairdresser) => BarberCycle(hairdresser)).toList(),
                   ),
-            ),
-            Stack(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    //Navigator.push(
-                    //    context,
-                     //   MaterialPageRoute(
-                     //       builder: (_) => StoreDetailPage(
-                     //         img: firstMenu[0]['img'],
-                     //       )));
-                  },
-                  child: Container(
-                    width: size.width,
-                    height: 160,
-                    child: Image(
-                      image: NetworkImage(firstMenu[0]['img']),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
                 ),
-                Positioned(
-                  bottom: 15,
-                  right: 15,
-                  child: SvgPicture.asset(
-                    firstMenu[0]['is_liked']
-                        ? "lib/assets/images/loved_icon.svg"
-                        : "lib/assets/images/love_icon.svg",
-                    width: 20,
-                    color: Colors.white,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              firstMenu[0]['name'],
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Sponsored",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        //Navigator.push(
+                        //    context,
+                        //   MaterialPageRoute(
+                        //       builder: (_) => StoreDetailPage(
+                        //         img: firstMenu[0]['img'],
+                        //       )));
+                      },
+                      child: Container(
+                        width: size.width,
+                        height: 160,
+                        child: Image(
+                          image: NetworkImage(firstMenu[0]['img']),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 15,
+                      right: 15,
+                      child: SvgPicture.asset(
+                        firstMenu[0]['is_liked']
+                            ? "lib/assets/images/loved_icon.svg"
+                            : "lib/assets/images/love_icon.svg",
+                        width: 20,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
-                  width: 5,
+                  height: 15,
                 ),
-                Icon(
-                  Icons.info,
-                  color: Colors.grey,
-                  size: 15,
-                )
-              ],
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
                 Text(
-                  firstMenu[0]['description'],
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(3)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Icon(
-                      Icons.hourglass_bottom,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                  ),
+                  firstMenu[0]['name'],
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
-                  width: 8,
+                  height: 8,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(3)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      firstMenu[0]['time'],
+                Row(
+                  children: [
+                    Text(
+                      "Sponsored",
                       style: TextStyle(
                         fontSize: 14,
                       ),
                     ),
-                  ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(
+                      Icons.info,
+                      color: Colors.grey,
+                      size: iconSizeDefault,
+                    )
+                  ],
                 ),
                 SizedBox(
-                  width: 8,
+                  height: 8,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(3)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      firstMenu[0]['delivery_fee'],
+                Row(
+                  children: [
+                    Text(
+                      firstMenu[0]['description'],
                       style: TextStyle(
                         fontSize: 14,
                       ),
                     ),
-                  ),
+                  ],
                 ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.hourglass_bottom,
+                          color: Colors.black,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          firstMenu[0]['time'],
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          firstMenu[0]['delivery_fee'],
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -561,7 +597,7 @@ class _HomePageState extends State<HomePage> {
                           Icon(
                             Icons.info,
                             color: Colors.grey,
-                            size: 15,
+                            size: iconSizeDefault,
                           )
                         ],
                       ),
