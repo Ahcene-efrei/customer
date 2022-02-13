@@ -9,7 +9,6 @@ import 'package:customer/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:customer/components/slider/CustomSlider.dart';
 import 'package:customer/data/json/home_page_json.dart';
 import 'package:customer/styles/theme.dart';
 import 'package:customer/presentation/screens/home/search_page.dart';
@@ -46,7 +45,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     infinitScrollShow = new InfinitScrollShow(_pagingController, Axis.vertical);
     infinitScrollShow.setToken();
-    print("test");
     _pagingController.addPageRequestListener((pageKey) {
       search(pageKey);
     });
@@ -761,23 +759,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> search(int pageKey) async{
-    print("search");
     try {
       List<Hairdresser> newItems = [];
-      if(cpt_tap){
-        final response = await widget.dio.get("https://api.instantwebtools.net/v1/passenger",
-            queryParameters: {
-              "page" : pageKey,
-              "size": _pageSize
-            }
-        );
-        print(response);
-        newItems = (response.data["data"] as List)
-            .map((x) => Hairdresser(firstname: x["name"]))
-        //.where((x) => x.firstname.toLowerCase().contains(search_text!))
-            .toList();
-        cpt_tap = false;
-      }
+      final response = await widget.dio.get("https://api.instantwebtools.net/v1/passenger",
+          queryParameters: {
+            "page" : pageKey,
+            "size": _pageSize
+          }
+      );
+      print(response);
+      newItems = (response.data["data"] as List)
+          .map((x) => Hairdresser(firstname: x["name"]))
+      //.where((x) => x.firstname.toLowerCase().contains(search_text!))
+          .toList();
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -793,7 +787,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _updateSearchTerm() {
-    print("_updateSearchTerm");
     setState(() {
       cpt_tap = true;
     });
