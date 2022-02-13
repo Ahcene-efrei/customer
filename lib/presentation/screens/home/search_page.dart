@@ -35,7 +35,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    infinitScrollShow = new InfinitScrollShow(_pagingController);
+    infinitScrollShow = new InfinitScrollShow(_pagingController, Axis.vertical);
     infinitScrollShow.setToken();
     print("test");
     _pagingController.addPageRequestListener((pageKey) {

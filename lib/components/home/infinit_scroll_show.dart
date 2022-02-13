@@ -16,12 +16,13 @@ class InfinitScrollShow extends StatelessWidget{
   final PagingController<int, Hairdresser> _pagingController;
   final storage = new FlutterSecureStorage();
   final dio = Dio();
+  final axis;
 
   static const _pageSize = 10;
   String? search_text;
   String? token;
 
-  InfinitScrollShow(this._pagingController);
+  InfinitScrollShow(this._pagingController, this.axis);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class InfinitScrollShow extends StatelessWidget{
             ),
           ),
       ),
-      scrollDirection: Axis.vertical
+      scrollDirection: this.axis
     );
   }
   Future<void> search(int pageKey) async{
