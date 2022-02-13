@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:customer/components/home/infinit_scroll_show.dart';
 import 'package:customer/data/models/hairdresser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,10 +30,13 @@ class _SearchPageState extends State<SearchPage> {
   String? token;
   final PagingController<int, Hairdresser> _pagingController =
   PagingController(firstPageKey: 0);
+  late InfinitScrollShow infinitScrollShow;
+
 
   @override
   void initState() {
-    setToken();
+    infinitScrollShow = new InfinitScrollShow(_pagingController);
+    infinitScrollShow.setToken();
     print("test");
     _pagingController.addPageRequestListener((pageKey) {
       search(pageKey);
@@ -48,10 +52,9 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: getAppBar(),
-      body: search_text != null && search_text != '' ? showResult() : Container()
+      body: search_text != null && search_text != '' ? infinitScrollShow.showResult() : Container()
     );
   }
 
@@ -95,82 +98,6 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-
-  Widget showResult(){
-    return PagedListView<int, Hairdresser>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Hairdresser>(
-        itemBuilder: (context, item, index) => InkWell(
-          onTap: ()=>{
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => HairdresserProfil(currentHairdresser: item),
-            ),)
-          },
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-            ),
-
-            child: Row(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  color: Colors.amber,
-                  child: Icon(
-                    Icons.person,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.getFirstName(),
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        SizedBox(height: 7),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 20,
-                              color: Colors.amber,
-                            ),
-                            Text("34 rue dcssdf qsdqs 93843 AZqskswd"),
-                          ],
-                        ),
-                        SizedBox(height: 7),
-                        RatingBarIndicator(
-                          rating: 3.5,
-                          itemSize: 15,
-                          itemBuilder: (context, index){
-                            return Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
-      ),
-    );
-  }
-
 
   Future<void> search(int pageKey) async{
     print("search");
@@ -229,8 +156,5 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Future<void> setToken() async {
-    token = await widget.storage.read(key: "jwt");
-  }
 }
 

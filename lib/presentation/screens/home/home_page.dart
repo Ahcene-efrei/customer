@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:customer/components/home/barber_cycle.dart';
 import 'package:customer/components/home/prestation.dart';
@@ -11,23 +14,58 @@ import 'package:customer/data/json/home_page_json.dart';
 import 'package:customer/styles/theme.dart';
 import 'package:customer/presentation/screens/home/search_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:customer/components/home/infinit_scroll_show.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:customer/data/models/hairdresser.dart';
+import 'package:dio/dio.dart';
+
+
+
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+  final dio = Dio();
+  final storage = new FlutterSecureStorage();
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  static const _pageSize = 10;
   int selectedTypeOfLocation = 0;
+  bool cpt_tap = true;
+
+  String? token;
+  final PagingController<int, Hairdresser> _pagingController =
+  PagingController(firstPageKey: 0);
+  late InfinitScrollShow infinitScrollShow;
+
+  void initState() {
+    infinitScrollShow = new InfinitScrollShow(_pagingController);
+    infinitScrollShow.setToken();
+    print("test");
+    _pagingController.addPageRequestListener((pageKey) {
+      search(pageKey);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: getBody(),
     );
   }
+
 
   Widget getBody(){
     var size = MediaQuery.of(context).size;
@@ -37,7 +75,8 @@ class _HomePageState extends State<HomePage> {
       "lib/assets/images/slide_1.jpg",
       "lib/assets/images/slide_2.jpg"
     ];
-    return ListView(
+    return
+      ListView(
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,6 +152,27 @@ class _HomePageState extends State<HomePage> {
               width: size.width,
               height: 10,
               decoration: BoxDecoration(color: Colors.black12),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            infinitScrollShow.showResult(),
+            FlatButton(
+              onPressed: () {
+                _updateSearchTerm();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Charger plus",
+                      style: textprimary),
+                  Icon(
+                    Icons.add,
+                    color: AppColors.primary,
+                    size: iconSizeDefault,
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 20,
@@ -698,6 +758,46 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Future<void> search(int pageKey) async{
+    print("search");
+    try {
+      List<Hairdresser> newItems = [];
+      if(cpt_tap){
+        final response = await widget.dio.get("https://api.instantwebtools.net/v1/passenger",
+            queryParameters: {
+              "page" : pageKey,
+              "size": _pageSize
+            }
+        );
+        print(response);
+        newItems = (response.data["data"] as List)
+            .map((x) => Hairdresser(firstname: x["name"]))
+        //.where((x) => x.firstname.toLowerCase().contains(search_text!))
+            .toList();
+        cpt_tap = false;
+      }
+
+      final isLastPage = newItems.length < _pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      print(error);
+      _pagingController.error = error;
+    }
+  }
+
+  void _updateSearchTerm() {
+    print("_updateSearchTerm");
+    setState(() {
+      cpt_tap = true;
+    });
+      _pagingController.refresh();
   }
   
 }
