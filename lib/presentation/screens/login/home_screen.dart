@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                         padding: const EdgeInsets.all(15)
                       ),
                       onPressed: (){
-                        // Navigator.pushNamed(context, "/login");
+                        Navigator.pushNamed(context, "/login");
 
 
                       },
