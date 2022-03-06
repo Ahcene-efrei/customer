@@ -79,7 +79,7 @@ class _CodePageState extends State<CodePage> {
               SizedBox(height: 40),
               Button(
                 text: 'Continuer',
-                callBack: ()=> sendCode(widget.phoneNumber, code, context)
+                callBack: ()=> Navigator.pushNamedAndRemoveUntil(context, "/homepage", (route) => false)
               ),
               SizedBox(height: 20),
               Row(

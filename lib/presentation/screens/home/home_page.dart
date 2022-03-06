@@ -88,20 +88,24 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        "lib/assets/images/pin_icon.svg",
-                        width: 20,
-                        color: Colors.black,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text("Ma position", style: customContent,)
-                    ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          "lib/assets/images/pin_icon.svg",
+                          width: 20,
+                          color: Colors.black,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child:Text("Ma position", style: customContent,)
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Padding(

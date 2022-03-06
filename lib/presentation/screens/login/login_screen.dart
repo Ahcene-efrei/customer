@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                         currentPhoneNumber = number.phoneNumber!;
                       },
                       onInputValidated: (bool value) {
-                        isValid = value;
+                        isValid = true;
                       },
                       selectorConfig: SelectorConfig(
                         selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
