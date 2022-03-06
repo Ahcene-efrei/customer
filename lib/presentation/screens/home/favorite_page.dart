@@ -54,7 +54,7 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   ValueListenable<List<EventCustomer>> _getValueNotifierEventsfromDay(DateTime date){
-    return ValueNotifier(_getEventsfromDay(selectedDay) ?? []);
+    return ValueNotifier(_getEventsfromDay(selectedDay));
   }
 
   @override

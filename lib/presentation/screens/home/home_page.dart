@@ -38,22 +38,21 @@ class _HomePageState extends State<HomePage> {
   bool cpt_tap = true;
 
   String? token;
-  final PagingController<int, Hairdresser> _pagingController =
-  PagingController(firstPageKey: 0);
-  late InfinitScrollShow infinitScrollShow;
+  // final PagingController<int, Hairdresser> _pagingController = PagingController(firstPageKey: 0);
+  // late InfinitScrollShow infinitScrollShow;
 
   void initState() {
-    infinitScrollShow = new InfinitScrollShow(_pagingController, Axis.vertical);
-    infinitScrollShow.setToken();
-    _pagingController.addPageRequestListener((pageKey) {
-      search(pageKey);
-    });
+    // infinitScrollShow = new InfinitScrollShow(_pagingController, Axis.vertical);
+    // infinitScrollShow.setToken();
+    // _pagingController.addPageRequestListener((pageKey) {
+    //   // search(pageKey);
+    // });
     super.initState();
   }
 
   @override
   void dispose() {
-    _pagingController.dispose();
+    // _pagingController.dispose();
     super.dispose();
   }
 
@@ -154,7 +153,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 20,
             ),
-            infinitScrollShow.showResult(),
+            // infinitScrollShow.showResult(),
             FlatButton(
               onPressed: () {
                 _updateSearchTerm();
@@ -775,14 +774,14 @@ class _HomePageState extends State<HomePage> {
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
+        // _pagingController.appendLastPage(newItems);
       } else {
         final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(newItems, nextPageKey);
+        // _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (error) {
       print(error);
-      _pagingController.error = error;
+      // _pagingController.error = error;
     }
   }
 
@@ -790,7 +789,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       cpt_tap = true;
     });
-      _pagingController.refresh();
+      // _pagingController.refresh();
   }
   
 }

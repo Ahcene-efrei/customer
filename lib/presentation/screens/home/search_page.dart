@@ -3,8 +3,6 @@ import 'dart:ui';
 
 import 'package:customer/data/models/search_parameters.dart';
 import 'package:customer/presentation/screens/search/filter_page.dart';
-import 'package:customer/components/home/infinit_scroll_show.dart';
-import 'package:customer/data/models/hairdresser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +31,10 @@ class _SearchPageState extends State<SearchPage> {
   String? token;
   final PagingController<int, Hairdresser> _pagingController =
   PagingController(firstPageKey: 0);
-  late InfinitScrollShow infinitScrollShow;
-
 
   @override
   void initState() {
-    infinitScrollShow = new InfinitScrollShow(_pagingController, Axis.vertical);
-    infinitScrollShow.setToken();
+    // setToken();
     print("test");
     _pagingController.addPageRequestListener((pageKey) {
       search(pageKey);
@@ -57,8 +52,8 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: getAppBar(),
-      body: search_text != null && search_text != '' ? infinitScrollShow.showResult() : Container()
+        appBar: getAppBar(),
+        body: search_text != null && search_text != '' ? showResult() : Container()
     );
   }
 
@@ -72,7 +67,7 @@ class _SearchPageState extends State<SearchPage> {
         width: double.infinity,
         child: TextField(
           style: TextStyle(
-            color: Colors.white70
+              color: Colors.white70
           ),
           cursorColor: Colors.white70,
           decoration: InputDecoration(
@@ -82,8 +77,8 @@ class _SearchPageState extends State<SearchPage> {
                 color: Colors.white70
             ),
             prefixIcon: Icon(
-              Icons.search,
-              color: Colors.white70
+                Icons.search,
+                color: Colors.white70
             ),
             suffixIcon: IconButton(
               icon: SvgPicture.asset(
@@ -125,79 +120,79 @@ class _SearchPageState extends State<SearchPage> {
     return PagedListView<int, Hairdresser>(
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<Hairdresser>(
-        itemBuilder: (context, item, index) => InkWell(
-          onTap: ()=>{
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) => HairdresserProfil(currentHairdresser: item),
-            ),)
-          },
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-            ),
+          itemBuilder: (context, item, index) => InkWell(
+            onTap: ()=>{
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => HairdresserProfil(currentHairdresser: item),
+              ),)
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)
+              ),
 
-            child: Row(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  color: Colors.amber,
-                  child: Icon(
-                    Icons.person,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.firstname ?? '',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        SizedBox(height: 7),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex:1,
-                              child: Icon(
-                                Icons.location_on,
-                                size: 20,
-                                color: Colors.amber,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 6,
-                              child: Text("34 rue dcssdf qsdqs 93843 AZqskswd")
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 7),
-                        RatingBarIndicator(
-                          rating: 3.5,
-                          itemSize: 15,
-                          itemBuilder: (context, index){
-                            return Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            );
-                          },
-                        ),
-                      ],
+              child: Row(
+                children: [
+                  Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.amber,
+                    child: Icon(
+                      Icons.person,
+                      size: 80,
+                      color: Colors.white,
                     ),
                   ),
-                )
-              ],
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.firstname ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          SizedBox(height: 7),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex:1,
+                                child: Icon(
+                                  Icons.location_on,
+                                  size: 20,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 6,
+                                  child: Text("34 rue dcssdf qsdqs 93843 AZqskswd")
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 7),
+                          RatingBarIndicator(
+                            rating: 3.5,
+                            itemSize: 15,
+                            itemBuilder: (context, index){
+                              return Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        )
+          )
       ),
     );
   }
@@ -233,7 +228,7 @@ class _SearchPageState extends State<SearchPage> {
         print(response);
         newItems = (response.data["data"] as List)
             .map((x) => Hairdresser(firstname: x["name"]))
-            //.where((x) => x.firstname.toLowerCase().contains(search_text!))
+        //.where((x) => x.firstname.toLowerCase().contains(search_text!))
             .toList();
       }
 
@@ -260,8 +255,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  // Future<void> setToken() async {
-  //   token = await widget.storage.read(key: "jwt");
-  // }
+// Future<void> setToken() async {
+//   token = await widget.storage.read(key: "jwt");
+// }
 }
-

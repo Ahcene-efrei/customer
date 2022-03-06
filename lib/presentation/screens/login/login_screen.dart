@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:customer/components/button/button.dart';
+import 'package:customer/data/api/account_api.dart';
+import 'package:customer/data/api/error_exception.dart';
 import 'package:customer/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -102,15 +104,19 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 Future<void> sendPhoneNumber(bool isValid, String phoneNumber, BuildContext context) async {
-  print(isValid);
-  if(isValid){
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CodePage(phoneNumber: phoneNumber),
-      )
-    );
+  try{
+    AccountApi api = AccountApi();
+    var response = await api.sendOtp(phoneNumber);
+    if(isValid && response['succeeded']){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CodePage(phoneNumber: phoneNumber),
+          )
+      );
+    }
+  }on ErrorException catch (_) {
+    print("login error");
   }
-
 
 }
