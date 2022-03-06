@@ -1,7 +1,7 @@
 import 'package:customer/data/models/product_type.dart';
 
 class Product{
-  int? id;
+  String? id;
   double? price;
   ProductType? type;
   String? hairType;

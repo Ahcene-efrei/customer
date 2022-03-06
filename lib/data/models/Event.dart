@@ -1,17 +1,22 @@
+import 'package:customer/data/models/customer.dart';
 import 'package:customer/data/models/hairdresser.dart';
+import 'package:customer/data/models/product.dart';
 
 class Event {
-  final String title;
-  final datetime;
-  final bool free = false;
-  final Hairdresser ?hairdresser;
+  String? id;
+  String description;
+  Product? product;
+  DateTime startDateTime;
+  DateTime endDateTime;
 
-  const Event(
-    this.hairdresser,
-    this.title,
-    this.datetime);
+  Event(
+  {
+    required this.description,
+    required this.startDateTime,
+    required this.endDateTime,
+  });
 
   @override
-  String toString() => title;
+  String toString() => "Du " + this.startDateTime.toString() + " au  " + this.endDateTime.toString() + "\n"+ this.description;
 
 }

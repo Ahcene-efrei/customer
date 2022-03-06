@@ -1,3 +1,5 @@
+import 'package:customer/data/models/EventHairdresser.dart';
+import 'package:customer/data/models/customer.dart';
 import 'package:customer/data/models/hairdresser.dart';
 import 'package:customer/data/models/product.dart';
 
@@ -49,10 +51,34 @@ List<Hairdresser> listOfHairdresser = [
 ];
 
 List<Product> products = [
-  // Product(name: "coupe homme", price: 10.50),
-  // Product(name: "coupe femme", price: 33.99),
-  // Product(name: "coupe simple", price: 17.99),
+  Product(id: "abc1", name: "coupe homme", price: 10.50),
+  Product(id: "iuo2", name: "coupe femme", price: 33.99),
+  Product(id: "mht56", name: "coupe simple", price: 17.99),
 ];
+
+Customer customer = Customer();
+List<EventHairdresser> ListEventHairdresser = [
+  EventHairdresser(
+      hairdresser: listOfHairdresser.first,
+      endDateTime: DateTime(2022, 3, 20),
+      startDateTime: DateTime.now(),
+      timeSlotsDurationInMinutes: 60,
+      availability: true,
+      canMoveAtCustomersHome: false,
+      workingDayDurationInMinutes: 420,
+      description: "abc"),
+  EventHairdresser(
+      hairdresser: listOfHairdresser[2],
+      endDateTime: DateTime(2022, 3, 14),
+      startDateTime: DateTime.now(),
+      timeSlotsDurationInMinutes: 30,
+      availability: true,
+      canMoveAtCustomersHome: false,
+      workingDayDurationInMinutes: 420,
+      description: "abc")
+];
+
+//List<>
 const List exploreMenu = [
   {
     "img":
