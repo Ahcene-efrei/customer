@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:customer/components/button/button.dart';
+import 'package:customer/data/api/account_api.dart';
+import 'package:customer/styles/colors.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -24,23 +27,37 @@ class _CodePageState extends State<CodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text(
+            'Vérification du code',
+            style: TextStyle(
+                color: Black
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation : 1,
+        shadowColor: Colors.white70,
+        automaticallyImplyLeading: false,
+      ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsetsDirectional.all(8.0),
+          padding: EdgeInsets.fromLTRB(25.0, 40.0, 25.0, 20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Saisissez le code à 4 chiffres envoyé au ${widget.phoneNumber}",
+                    "Nous vous avons envoyé un code à 4 chiffres au ${widget.phoneNumber}",
                     style: TextStyle(
-                      fontSize: 20,
-
+                      fontSize: 18,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 20),
                   VerificationCode(
                     textStyle: TextStyle(fontSize: 20.0),
                     keyboardType: TextInputType.number,
@@ -59,32 +76,31 @@ class _CodePageState extends State<CodePage> {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0,0,0,50),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.black, // This is what you need!
-                      padding: const EdgeInsets.all(15)
+              SizedBox(height: 40),
+              Button(
+                text: 'Continuer',
+                callBack: ()=> Navigator.pushNamedAndRemoveUntil(context, "/homepage", (route) => false)
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Réenvoyer le code",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
-                  onPressed: (){
-                    sendCode(widget.phoneNumber, code, context);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        "Continuer",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      Icon(Icons.arrow_forward_ios)
-                    ],
-                  ),
-                ),
+                  Text(
+                    "60 secondes restantes",
+                    style: TextStyle(
+                      color: Colors.black45
+                    )
+                  )
+                ],
               )
             ],
-        ),
+          ),
         ),
       ),
     );
@@ -94,13 +110,14 @@ class _CodePageState extends State<CodePage> {
     //SharedPreferences preferences = await SharedPreferences.getInstance();
     //await preferences.clear();
     print("aza");
-    var response = await widget.dio.post(
-      'https://labonnecoupe.azurewebsites.net/api/Customer/AuthenticateOrRegister',
-      data: {
-        'phoneNumber': phoneNumber,
-        'token':code
-      },
-    );
+    var response = await AccountApi().authenticate(phoneNumber, code);
+    // var response = await widget.dio.post(
+    //   'https://labonnecoupe.azurewebsites.net/api/Customer/AuthenticateOrRegister',
+    //   data: {
+    //     'phoneNumber': phoneNumber,
+    //     'token':code
+    //   },
+    // );
     print(response);
     jsonData = jsonDecode(jsonEncode(response.data["data"]));
     if(response.statusCode == 200 && response.data['succeeded']){

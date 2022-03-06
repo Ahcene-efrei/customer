@@ -17,13 +17,17 @@ class AccountApi extends Api{
   }
 
   Future<dynamic> authenticate(String phoneNumber, String otp) async {
-    final dio = Dio(BaseOptions(contentType: "application/json; charset=utf-8"));
+    print("AccountApi.authenticate");
+    final dio = Dio();
+    print("phoneNumber: ${phoneNumber}");
+    print("otp: ${otp}");
     var response = await dio.post('https://labonnecoupe.azurewebsites.net/api/Customer/Authenticate',
       data: {
       'phoneNumber': phoneNumber,
       'token':otp
       },
     );
+
     if(response.statusCode == 200 && response.data['succeeded']) {
       var jsonData = jsonDecode(jsonEncode(response.data["data"]));
       await storage.write(key: 'jwt', value: jsonData['jwtToken']);
