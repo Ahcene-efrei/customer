@@ -7,6 +7,7 @@ class Product{
   String? hairType;
   int? durationInMinutes;
   bool? realizableAtHome;
+  String? name;
 
   Product({
     this.id,
@@ -14,9 +15,13 @@ class Product{
     this.type,
     this.hairType,
     this.durationInMinutes,
-    this.realizableAtHome
+    this.realizableAtHome,
+    this.name
   });
 
+  getName(){
+    return this.name;
+  }
 
 
 }

@@ -1,21 +1,62 @@
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:animate_do/animate_do.dart';
+import 'package:customer/components/home/barber_cycle.dart';
+import 'package:customer/components/home/prestation.dart';
+import 'package:customer/presentation/screens/home/MyImageView.dart';
+import 'package:customer/styles/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:customer/components/slider/CustomSlider.dart';
 import 'package:customer/data/json/home_page_json.dart';
 import 'package:customer/styles/theme.dart';
 import 'package:customer/presentation/screens/home/search_page.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:customer/components/home/infinit_scroll_show.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:customer/data/models/hairdresser.dart';
+import 'package:dio/dio.dart';
+
+
+
+
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+  final dio = Dio();
+  final storage = new FlutterSecureStorage();
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  static const _pageSize = 10;
   int selectedTypeOfLocation = 0;
+  bool cpt_tap = true;
+
+  String? token;
+  final PagingController<int, Hairdresser> _pagingController =
+  PagingController(firstPageKey: 0);
+  late InfinitScrollShow infinitScrollShow;
+
+  void initState() {
+    infinitScrollShow = new InfinitScrollShow(_pagingController, Axis.vertical);
+    infinitScrollShow.setToken();
+    _pagingController.addPageRequestListener((pageKey) {
+      search(pageKey);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,30 +64,79 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   Widget getBody(){
     var size = MediaQuery.of(context).size;
-    return ListView(
+    int currentPos = 0;
+    List<String> listPaths = [
+      "lib/assets/images/barber.jpg",
+      "lib/assets/images/slide_1.jpg",
+      "lib/assets/images/slide_2.jpg"
+    ];
+    return
+      ListView(
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
-            SizedBox(
-              height: 15,
-            ),
-            getLocationWidget(size),
-            SizedBox(
-              height: 15,
-            ),
-            selectTypeOfLocation(),
-            SizedBox(
-              height: 15,
-            ),
-            CustomSliderWidget(
-              items: [
-                "lib/assets/images/slider2.png",
-                "lib/assets/images/slider1.png",
-                "lib/assets/images/slider3.png"
-              ],
+            ColoredBox(
+              color: Colors.black,
+              child: Column(
+                  children: [
+                    SizedBox(
+                      height: 15,
+                    ),
+                    getLocationWidget(size),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    selectTypeOfLocation(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: 250,
+                        aspectRatio: 16/9,
+                        initialPage: 0,
+                        enableInfiniteScroll: true,
+                        reverse: false,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            currentPos = index;
+                          });
+                        },
+                        scrollDirection: Axis.horizontal,
+                      ),
+                      items: listPaths.map((i) {
+                        return MyImageView(i);
+                      }).toList(),
+                  ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: listPaths.map((url) {
+                        int index = listPaths.indexOf(url);
+                        return Container(
+                          width: 8.0,
+                          height: 8.0,
+                          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentPos == index
+                                ? Color.fromRGBO(255, 255, 255, 0.9)
+                                : Color.fromRGBO(222, 215, 215, 0.4),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ]
+              ),
             ),
             getCategories(size),
             SizedBox(
@@ -60,6 +150,27 @@ class _HomePageState extends State<HomePage> {
               width: size.width,
               height: 10,
               decoration: BoxDecoration(color: Colors.black12),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            infinitScrollShow.showResult(),
+            FlatButton(
+              onPressed: () {
+                _updateSearchTerm();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Charger plus",
+                      style: textprimary),
+                  Icon(
+                    Icons.add,
+                    color: AppColors.primary,
+                    size: iconSizeDefault,
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 20,
@@ -83,29 +194,25 @@ class _HomePageState extends State<HomePage> {
             height: 45,
             width: size.width - 70,
             decoration: BoxDecoration(
-                color: Colors.black12,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(30)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          "lib/assets/images/pin_icon.svg",
-                          width: 20,
-                          color: Colors.black,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child:Text("Ma position", style: customContent,)
-                        )
-                      ],
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        "lib/assets/images/pin_icon.svg",
+                        width: 20,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text("Ma position", style: customContent,)
+                    ],
                   ),
                 ),
                 Padding(
@@ -150,6 +257,7 @@ class _HomePageState extends State<HomePage> {
             child: IconButton(
               icon: SvgPicture.asset(
                 "lib/assets/images/search_icon.svg",
+                color: Colors.white,
               ),
               onPressed: ()=>{
                 Navigator.push(
@@ -183,10 +291,10 @@ class _HomePageState extends State<HomePage> {
               });
             },
             child: selectedTypeOfLocation == index
-                ? ElasticIn(
+            ? ElasticIn(
               child: Container(
                 decoration: BoxDecoration(
-                    color: Colors.black,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(30)),
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -198,14 +306,14 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
-                            color: Colors.white),
+                            color: Colors.black),
                       )
                     ],
                   ),
                 ),
               ),
             )
-                : Container(
+            : Container(
               decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(30)),
@@ -216,7 +324,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       TypeOfLocation[index],
-                      style: customContent,
+                      style: customContentWhite,
                     )
                   ],
                 ),
@@ -238,37 +346,49 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              bottom: 15,
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                margin: EdgeInsets.only(left: 30),
-                child: Row(
-                    children: List.generate(categories.length, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 35),
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(
-                              categories[index]['img'],
-                              width: 40,
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              categories[index]['name'],
-                              style: customParagraph,
-                            )
-                          ],
-                        ),
-                      );
-                    })),
-              ),
-            ),
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Prestations",
+                      style: customTitle,
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "YourRoute");
+                      },
+                      child: Row(
+                        children: [
+                          Text("Voir plus",
+                          style: textprimary),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.primary,
+                            size: iconSizeDefault,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+
+                SizedBox(
+                  height: 15,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    child: Row(
+                      children: categories.map((prestation) => Prestation(prestation)).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            )
           ),
         ),
       ),
@@ -279,149 +399,178 @@ class _HomePageState extends State<HomePage> {
   Container getADomicile(size){
     return Container(
       width: size.width,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Les meilleurs coiffeurs à proximité",
-              style: customTitle,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Stack(
-              children: [
-
-                GestureDetector(
-                  onTap: () {
-                    //Navigator.push(
-                    //    context,
-                     //   MaterialPageRoute(
-                     //       builder: (_) => StoreDetailPage(
-                     //         img: firstMenu[0]['img'],
-                     //       )));
+      child: Column(
+        children: [
+          Padding(
+          padding: const EdgeInsets.only(left: 13),
+          child:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Les meilleurs coiffeurs proches",
+                style: customTitle,
+              ),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "YourRoute");
                   },
-                  child: Container(
-                    width: size.width,
-                    height: 160,
-                    child: Image(
-                      image: NetworkImage(firstMenu[0]['img']),
-                      fit: BoxFit.cover,
-                    ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.primary,
+                    size: iconSizeDefault,
+                  )
+              )
+            ],
+          ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child:
+                  Row(
+                    children: listOfHairdresser.map((hairdresser) => BarberCycle(hairdresser)).toList(),
                   ),
                 ),
-                Positioned(
-                  bottom: 15,
-                  right: 15,
-                  child: SvgPicture.asset(
-                    firstMenu[0]['is_liked']
-                        ? "lib/assets/images/loved_icon.svg"
-                        : "lib/assets/images/love_icon.svg",
-                    width: 20,
-                    color: Colors.white,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              firstMenu[0]['name'],
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Sponsored",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        //Navigator.push(
+                        //    context,
+                        //   MaterialPageRoute(
+                        //       builder: (_) => StoreDetailPage(
+                        //         img: firstMenu[0]['img'],
+                        //       )));
+                      },
+                      child: Container(
+                        width: size.width,
+                        height: 160,
+                        child: Image(
+                          image: NetworkImage(firstMenu[0]['img']),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 15,
+                      right: 15,
+                      child: SvgPicture.asset(
+                        firstMenu[0]['is_liked']
+                            ? "lib/assets/images/loved_icon.svg"
+                            : "lib/assets/images/love_icon.svg",
+                        width: 20,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
-                  width: 5,
+                  height: 15,
                 ),
-                Icon(
-                  Icons.info,
-                  color: Colors.grey,
-                  size: 15,
-                )
-              ],
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
                 Text(
-                  firstMenu[0]['description'],
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(3)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Icon(
-                      Icons.hourglass_bottom,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                  ),
+                  firstMenu[0]['name'],
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
-                  width: 8,
+                  height: 8,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(3)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      firstMenu[0]['time'],
+                Row(
+                  children: [
+                    Text(
+                      "Sponsored",
                       style: TextStyle(
                         fontSize: 14,
                       ),
                     ),
-                  ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(
+                      Icons.info,
+                      color: Colors.grey,
+                      size: iconSizeDefault,
+                    )
+                  ],
                 ),
                 SizedBox(
-                  width: 8,
+                  height: 8,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(3)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      firstMenu[0]['delivery_fee'],
+                Row(
+                  children: [
+                    Text(
+                      firstMenu[0]['description'],
                       style: TextStyle(
                         fontSize: 14,
                       ),
                     ),
-                  ),
+                  ],
                 ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Icon(
+                          Icons.hourglass_bottom,
+                          color: Colors.black,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          firstMenu[0]['time'],
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(3)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          firstMenu[0]['delivery_fee'],
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -506,7 +655,7 @@ class _HomePageState extends State<HomePage> {
                           Icon(
                             Icons.info,
                             color: Colors.grey,
-                            size: 15,
+                            size: iconSizeDefault,
                           )
                         ],
                       ),
@@ -607,6 +756,41 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Future<void> search(int pageKey) async{
+    try {
+      List<Hairdresser> newItems = [];
+      final response = await widget.dio.get("https://api.instantwebtools.net/v1/passenger",
+          queryParameters: {
+            "page" : pageKey,
+            "size": _pageSize
+          }
+      );
+      print(response);
+      newItems = (response.data["data"] as List)
+          .map((x) => Hairdresser(firstname: x["name"]))
+      //.where((x) => x.firstname.toLowerCase().contains(search_text!))
+          .toList();
+
+      final isLastPage = newItems.length < _pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      print(error);
+      _pagingController.error = error;
+    }
+  }
+
+  void _updateSearchTerm() {
+    setState(() {
+      cpt_tap = true;
+    });
+      _pagingController.refresh();
   }
   
 }

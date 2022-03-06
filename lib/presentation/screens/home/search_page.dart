@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:customer/data/models/search_parameters.dart';
 import 'package:customer/presentation/screens/search/filter_page.dart';
+import 'package:customer/components/home/infinit_scroll_show.dart';
+import 'package:customer/data/models/hairdresser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:customer/data/json/home_page_json.dart';
-import 'package:customer/data/models/Hairdresser.dart';
+import 'package:customer/data/models/hairdresser.dart';
 import 'package:customer/presentation/screens/hairdresser/HairdresserProfil.dart';
 
 
@@ -31,10 +33,13 @@ class _SearchPageState extends State<SearchPage> {
   String? token;
   final PagingController<int, Hairdresser> _pagingController =
   PagingController(firstPageKey: 0);
+  late InfinitScrollShow infinitScrollShow;
+
 
   @override
   void initState() {
-    // setToken();
+    infinitScrollShow = new InfinitScrollShow(_pagingController, Axis.vertical);
+    infinitScrollShow.setToken();
     print("test");
     _pagingController.addPageRequestListener((pageKey) {
       search(pageKey);
@@ -53,7 +58,7 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       appBar: getAppBar(),
-      body: search_text != null && search_text != '' ? showResult() : Container()
+      body: search_text != null && search_text != '' ? infinitScrollShow.showResult() : Container()
     );
   }
 
