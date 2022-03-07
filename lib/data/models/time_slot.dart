@@ -15,5 +15,15 @@ class TimeSlot{
     this.canMoveAtClientsHome
   });
 
+  TimeSlot fromJson(jsonData){
+    id = jsonData['id'];
+    start = jsonData['start'];
+    end = jsonData['end'];
+    durationInMinutes = jsonData['durationInMinutes'];
+    available = jsonData['available'];
+    canMoveAtClientsHome = jsonData['canMoveAtClientsHome'];
+    return this;
+  }
+
 
 }

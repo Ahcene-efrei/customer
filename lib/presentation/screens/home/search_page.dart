@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:customer/data/api/error_exception.dart';
+import 'package:customer/data/api/hairdresser_api.dart';
 import 'package:customer/data/models/search_parameters.dart';
 import 'package:customer/presentation/screens/search/filter_page.dart';
 import 'package:dio/dio.dart';
@@ -30,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
   SearchParameters parameters = new SearchParameters();
   String? token;
   final PagingController<int, Hairdresser> _pagingController =
-  PagingController(firstPageKey: 0);
+  PagingController(firstPageKey: 1);
 
   @override
   void initState() {
@@ -150,7 +152,7 @@ class _SearchPageState extends State<SearchPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            item.firstname ?? '',
+                            "${item.firstname} ${item.lastname}",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 15,
@@ -170,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                               Expanded(
                                   flex: 6,
-                                  child: Text("34 rue dcssdf qsdqs 93843 AZqskswd")
+                                  child: Text("${item.address!.address1}, ${item.address!.city}")
                               ),
                             ],
                           ),
@@ -205,6 +207,7 @@ class _SearchPageState extends State<SearchPage> {
       print(search_text);
       if(search_text != null && search_text != ''){
         print("-----");
+        parameters.name = search_text;
         //final newItems = await RemoteApi.getCharacterList(pageKey, _pageSize);
         //final newItems = listOfHairdresser;
         /*widget.dio.options.headers['content-Type'] = 'application/json';
@@ -219,17 +222,22 @@ class _SearchPageState extends State<SearchPage> {
         ).catchError((error){
           print(error.response);
         });*/
-        final response = await widget.dio.get("https://api.instantwebtools.net/v1/passenger",
-            queryParameters: {
-              "page" : pageKey,
-              "size": _pageSize,
-            }
-        );
-        print(response);
-        newItems = (response.data["data"] as List)
-            .map((x) => Hairdresser(firstname: x["name"]))
-        //.where((x) => x.firstname.toLowerCase().contains(search_text!))
-            .toList();
+        try{
+          var response = await HairdresserApi().getListHairdresser(parameters);
+          newItems = (response["data"]['items'] as List)
+              .map((x) => Hairdresser().fromJson(x))
+          //.where((x) => x.firstname.toLowerCase().contains(search_text!))
+              .toList();
+        }on Exception catch (_) {
+          print("code error");
+        }
+        // final response = await widget.dio.get("https://api.instantwebtools.net/v1/passenger",
+        //     queryParameters: {
+        //       "page" : pageKey,
+        //       "size": _pageSize,
+        //     }
+        // );
+
       }
 
       final isLastPage = newItems.length < _pageSize;
@@ -237,6 +245,7 @@ class _SearchPageState extends State<SearchPage> {
         _pagingController.appendLastPage(newItems);
       } else {
         final nextPageKey = pageKey + 1;
+        parameters.pageNumber = nextPageKey;
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (error) {

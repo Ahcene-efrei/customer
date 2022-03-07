@@ -13,7 +13,7 @@ class Hairdresser {
   int? appointmentsCount;
   int? status;
   int? gender;
-  List<Addresse>? addresses;
+  Addresse? address;
   List<Appointment>? appointments;
   List<Day>? planning;
   List<Product>? catalog;
@@ -30,7 +30,7 @@ class Hairdresser {
     this.appointmentsCount,
     this.status,
     this.gender,
-    this.addresses,
+    this.address,
     this.appointments,
     this.planning,
     this.catalog,
@@ -38,14 +38,18 @@ class Hairdresser {
     this.productId
   });
 
-  void fromJson(jsonData){
+  Hairdresser fromJson(jsonData){
     phoneNumber = jsonData["phoneNumber"];
     firstname = jsonData["firstname"];
     lastname = jsonData["lastname"];
     email = jsonData["email"];
     pictureUrl = jsonData["pictureUrl"];
     gender = jsonData["gender"];
-    addresses = jsonData["addresses"];
+    address = Addresse().fromJson(jsonData["address"]);
+    catalog = (jsonData["catalog"] as List).map((x) => Product().fromJson(x)).toList();
+    planning = (jsonData["planning"] as List).map((x) => Day().fromJson(x)).toList().cast<Day>();
+    appointments = (jsonData["appointments"] as List).map((x) => Appointment().fromJson(x)).toList();
+    return this;
   }
 
   getFirstName(){
@@ -60,7 +64,7 @@ class Hairdresser {
       'email': email,
       'pictureUrl': pictureUrl,
       'gender': gender,
-      'addresses': addresses,
+      'address': address,
     };
   }
 
