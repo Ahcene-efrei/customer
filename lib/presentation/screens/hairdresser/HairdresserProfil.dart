@@ -218,7 +218,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                         child: Row(
                           children: [
                             SvgPicture.asset(
-                              "assets/images/pin_icon.svg",
+                              "lib/assets/images/pin_icon.svg",
                               width: 15,
                               color: Colors.black.withOpacity(0.5),
                             ),
