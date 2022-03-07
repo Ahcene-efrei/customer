@@ -55,52 +55,6 @@ class InfinitScrollShow extends StatelessWidget{
       scrollDirection: this.axis
     );
   }
-  Future<void> search(int pageKey) async{
-    print("search");
-    try {
-      List<Hairdresser> newItems = [];
-      print(search_text);
-      if(search_text != null && search_text != ''){
-        print("-----");
-        //final newItems = await RemoteApi.getCharacterList(pageKey, _pageSize);
-        //final newItems = listOfHairdresser;
-        /*widget.dio.options.headers['content-Type'] = 'application/json';
-        widget.dio.options.headers["authorization"] = "Bearer ${token}";
-        print(pageKey);
-        final response = await widget.dio.get(
-            "https://labonnecoupe.azurewebsites.net/api/Hairdresser/GetAllWithPagination",
-            queryParameters: {
-              "pageNumber" : pageKey,
-              "pageSize": _pageSize
-            }
-        ).catchError((error){
-          print(error.response);
-        });*/
-        final response = await dio.get("https://api.instantwebtools.net/v1/passenger",
-            queryParameters: {
-              "page" : pageKey,
-              "size": _pageSize
-            }
-        );
-        print(response);
-        newItems = (response.data["data"] as List)
-            .map((x) => Hairdresser(firstname: x["name"]))
-        //.where((x) => x.firstname.toLowerCase().contains(search_text!))
-            .toList();
-      }
-
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + 1;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error) {
-      print(error);
-      _pagingController.error = error;
-    }
-  }
   Future<void> setToken() async {
     token = await storage.read(key: "jwt");
   }
