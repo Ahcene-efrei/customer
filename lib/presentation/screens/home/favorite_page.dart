@@ -1,8 +1,12 @@
+import 'package:customer/data/api/customer_api.dart';
+import 'package:customer/data/api/hairdresser_api.dart';
 import 'package:customer/data/models/Event.dart';
 import 'package:customer/data/models/EventCustomer.dart';
 import 'package:customer/data/models/EventHairdresser.dart';
+import 'package:customer/data/models/appointment.dart' as appointement;
 import 'package:customer/data/models/hairdresser.dart';
 import 'package:customer/data/models/product.dart';
+import 'package:customer/data/models/time_slot.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:customer/data/json/home_page_json.dart';
@@ -18,8 +22,8 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  late Map<DateTime, List<EventCustomer>> selectedEvents;
-  late ValueNotifier<List<EventCustomer>> _selectedEventsValueNotifier;
+  late Map<DateTime, List<appointement.Appointment>> selectedEvents;
+  late ValueNotifier<List<appointement.Appointment>> _selectedEventsValueNotifier;
   CalendarFormat format = CalendarFormat.week;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
@@ -40,21 +44,24 @@ class _FavoritePageState extends State<FavoritePage> {
   get currentCustomer => customer;
   EventHairdresser eventHairdresser = ListEventHairdresser.first;
 
+  late CustomerApi _customerApi;
+
   @override
   void initState() {
     selectedEvents = {};
     kFirstDay = DateTime(kToday.year, kToday.month, kToday.day);
     kLastDay = DateTime(kToday.year, kToday.month, kToday.day + 21);
     dropdownvalue = listProducts.first;
+    _customerApi = CustomerApi();
     super.initState();
   }
 
-  List<EventCustomer> _getEventsfromDay(DateTime date) {
+  List<appointement.Appointment> _getEventsfromDay(DateTime date) {
     return selectedEvents[date] ?? [];
   }
 
-  ValueListenable<List<EventCustomer>> _getValueNotifierEventsfromDay(DateTime date){
-    return ValueNotifier(_getEventsfromDay(selectedDay));
+  ValueListenable<List<appointement.Appointment>> _getValueNotifierEventsfromDay(DateTime date){
+    return ValueNotifier(_getEventsfromDay(date));
   }
 
   @override
@@ -67,7 +74,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("ESTech Calendar"),
+        title: Text("Booking calendar"),
         centerTitle: true,
       ),
       body: Column(
@@ -136,7 +143,7 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
           ),
           Expanded(
-            child: ValueListenableBuilder<List<EventCustomer>>(
+            child: ValueListenableBuilder<List<appointement.Appointment>>(
               valueListenable: _getValueNotifierEventsfromDay(selectedDay),
               builder: (context, value, _) {
                 return ListView.builder(
@@ -210,48 +217,28 @@ class _FavoritePageState extends State<FavoritePage> {
               ),
               TextButton(
                 child: Text("Ok"),
-                onPressed: () {
-                  if (_eventController.text.isEmpty) {
+                onPressed: () async {
+                  var res;
+                  appointement.Appointment appt;
+                  TimeSlot timeSlot = TimeSlot(
+                      id: "edporjgnj",
+                      start: selectedDay.toString(),
+                      end: selectedDay.toString()
+                  );
+                  appt = appointement.Appointment(timeSlot: timeSlot);
 
-                  } else {
+                  HairdresserApi apiH = HairdresserApi();
 
-                    if (selectedEvents[selectedDay] != null) {
-                      selectedEvents[selectedDay]?.add(
-                        EventCustomer(
-                            product: dropdownvalue,
-                            hairdresser: hairdresser,
-                            description:_eventController.text,
-                            endDateTime: DateTime(
-                              eventHairdresser.startDateTime.year,
-                              eventHairdresser.startDateTime.month,
-                              eventHairdresser.startDateTime.day,
-                              eventHairdresser.startDateTime.hour,
-                              eventHairdresser.startDateTime.minute + eventHairdresser.timeSlotsDurationInMinutes
-                              ),
-                            startDateTime: selectedDay,
-                            customer: currentCustomer,
-                        ),
-                      );
-                    } else {
-                      selectedEvents[selectedDay] = [
-                        EventCustomer(
-                          product: dropdownvalue,
-                          hairdresser: hairdresser,
-                          description:_eventController.text,
-                          endDateTime: DateTime(
-                              eventHairdresser.startDateTime.year,
-                              eventHairdresser.startDateTime.month,
-                              eventHairdresser.startDateTime.day,
-                              eventHairdresser.startDateTime.hour,
-                              eventHairdresser.startDateTime.minute + eventHairdresser.timeSlotsDurationInMinutes
-                          ),
-                          startDateTime: selectedDay,
-                          customer: currentCustomer,
-                        ),
-                      ];
-                    }
-                    print(selectedEvents[selectedDay]);
+                  if (selectedEvents[selectedDay] != null) {
+                    selectedEvents[selectedDay]?.add(appt);
+                    res = await _customerApi.addAppointment(appt);
+                  }else{
+                    appt = appointement.Appointment(timeSlot: timeSlot);
+                    selectedEvents[selectedDay] = [appt];
+                    res = await _customerApi.addAppointment(appt);
                   }
+                  print(res);
+                  print(selectedEvents[selectedDay]);
                   Navigator.pop(context);
                   _eventController.clear();
                   setState((){});

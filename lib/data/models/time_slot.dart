@@ -25,5 +25,8 @@ class TimeSlot{
     return this;
   }
 
+  @override
+  String toString() => "Du " + this.start! + " au  " + this.end!;
+
 
 }

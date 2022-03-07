@@ -40,7 +40,7 @@ class CustomerApi extends Api{
     String token = await getJTWToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers["authorization"] = "Bearer ${token}";
-    var response = await dio.post('https://labonnecoupe.azurewebsites.net/api/address',
+    var response = await dio.post('https://labonnecoupe.azurewebsites.net/api/Customer/address',
       data: {
         "name": addresse.name,
         "address1": addresse.address1,
@@ -70,7 +70,7 @@ class CustomerApi extends Api{
     String token = await getJTWToken();
     dio.options.headers['content-Type'] = 'application/json';
     dio.options.headers["authorization"] = "Bearer ${token}";
-    var response = await dio.post('https://labonnecoupe.azurewebsites.net/api/appointment',
+    var response = await dio.post('https://labonnecoupe.azurewebsites.net/api/Customer/appointment/book',
       data: {
         "productId": appointment.product!.id,
         "timeSlotId": appointment.timeSlot!.id,

@@ -25,4 +25,7 @@ class Appointment{
 
     return this;
   }
+
+  @override
+  String toString() => this.timeSlot.toString();
 }
