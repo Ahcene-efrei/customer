@@ -4,30 +4,30 @@ import 'package:customer/data/enums/producttype.dart';
 
 class SearchParameters{
   String? name;
-  int? latitude;
-  int? longitude;
+  double latitude;
+  double longitude;
   String? fromDateTime;
-  int minPrice;
-  int maxPrice;
+  double minPrice;
+  double maxPrice;
   Genre gender;
   HairType hairType;
   ProductType productType;
-  bool? realizableAtHome;
-  int? pageNumber;
-  int? pageSize;
+  bool realizableAtHome;
+  int pageNumber;
+  int pageSize;
 
   SearchParameters({
     this.name,
-    this.longitude,
-    this.latitude,
+    this.longitude = 0.0,
+    this.latitude = 0.0,
     this.hairType = HairType.Undefined,
     this.gender = Genre.Undefined,
-    this.realizableAtHome,
+    this.realizableAtHome = true,
     this.fromDateTime,
     this.maxPrice = 500,
-    this.minPrice = 0,
-    this.pageNumber,
-    this.pageSize,
+    this.minPrice = 1,
+    this.pageNumber = 1,
+    this.pageSize = 10,
     this.productType = ProductType.Haircut1
   });
 }

@@ -223,9 +223,9 @@ class _FilterScreenState extends State<FilterScreen> {
                 divisions: 25,
                 activeColor: Colors.red[700],
                 inactiveColor: Colors.red[300],
-                min: 0,
+                min: 1,
                 max: 500,
-                values: RangeValues(widget.params.minPrice.toDouble(), widget.params.maxPrice.toDouble()),
+                values: RangeValues(widget.params.minPrice, widget.params.maxPrice),
                 labels: RangeLabels("${widget.params.minPrice.toString()}\€", "${widget.params.maxPrice.toString()}\€"),
                 onChanged: (value){
                   setState(() {
