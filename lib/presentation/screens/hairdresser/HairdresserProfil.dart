@@ -1,3 +1,4 @@
+import 'package:customer/components/button/button.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:customer/data/json/home_page_json.dart';
 import 'package:customer/data/models/hairdresser.dart';
@@ -102,7 +103,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.currentHairdresser.getFirstName(),
+                    "${widget.currentHairdresser.getFirstName()} ${widget.currentHairdresser.lastname}",
                     style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
@@ -226,7 +227,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                               width: 8,
                             ),
                             Text(
-                              "38 Park Row Frnt 4,New York,NY 1003",
+                              "${widget.currentHairdresser.address!.address1}, ${widget.currentHairdresser.address!.city}",
                               style: TextStyle(fontSize: 14),
                             )
                           ],
@@ -250,66 +251,73 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                     color: Colors.black.withOpacity(0.3),
                   ),
 
-                  ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(8),
-                    itemCount: listProducts.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: ()=>{
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => BookingPage(product:listProducts[index]),
-                          ))
-                        },
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)
-                          ),
-
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 60,
-                                width: 60,
-                                color: Colors.blueGrey,
-                                child: Icon(
-                                  Icons.shopping_cart_outlined,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Flexible(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        listProducts[index].getName(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      SizedBox(height: 7),
-                                      Text("test"),
-                                      SizedBox(height: 7),
-                                      Text(
-                                        "${listProducts[index].price.toString()} €",
-                                        style: TextStyle(
-                                            fontSize: 18
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    }
+                  // ListView.builder(
+                  //   shrinkWrap: true,
+                  //   padding: const EdgeInsets.all(8),
+                  //   itemCount: listProducts.length,
+                  //   itemBuilder: (BuildContext context, int index) {
+                  //     return InkWell(
+                  //       onTap: ()=>{
+                  //         Navigator.push(context, MaterialPageRoute(
+                  //           builder: (context) => BookingPage(product:listProducts[index]),
+                  //         ))
+                  //       },
+                  //       child: Card(
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(5)
+                  //         ),
+                  //
+                  //         child: Row(
+                  //           children: [
+                  //             Container(
+                  //               height: 60,
+                  //               width: 60,
+                  //               color: Colors.blueGrey,
+                  //               child: Icon(
+                  //                 Icons.shopping_cart_outlined,
+                  //                 size: 40,
+                  //                 color: Colors.white,
+                  //               ),
+                  //             ),
+                  //             Flexible(
+                  //               child: Padding(
+                  //                 padding: const EdgeInsets.all(15.0),
+                  //                 child: Column(
+                  //                   crossAxisAlignment: CrossAxisAlignment.start,
+                  //                   children: [
+                  //                     Text(
+                  //                       listProducts[index].getName(),
+                  //                       overflow: TextOverflow.ellipsis,
+                  //                       style: TextStyle(
+                  //                           fontSize: 18,
+                  //                           fontWeight: FontWeight.bold
+                  //                       ),
+                  //                     ),
+                  //                     SizedBox(height: 7),
+                  //                     Text("test"),
+                  //                     SizedBox(height: 7),
+                  //                     Text(
+                  //                       "${listProducts[index].price.toString()} €",
+                  //                       style: TextStyle(
+                  //                           fontSize: 18
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //               ),
+                  //             )
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     );
+                  //   }
+                  // ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(0,0,0,50),
+                      child: Button(text: "Réserver", callBack: ()=>{})
                   ),
                 ],
               ),

@@ -15,4 +15,14 @@ class Appointment{
     this.timeSlot,
     this.status
   });
+
+  Appointment fromJson(jsonData){
+    id = jsonData["id"];
+    product = Product().fromJson(jsonData["product"]);
+    atHome = jsonData["atHome"];
+    timeSlot = TimeSlot().fromJson(jsonData["timeSlot"]);
+    status = jsonData["status"];
+
+    return this;
+  }
 }

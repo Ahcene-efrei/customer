@@ -12,4 +12,12 @@ class Day{
     this.end,
     this.timeSlots
   });
+
+  Day fromJson(jsonData){
+    id = jsonData['id'];
+    start = jsonData['start'];
+    end = jsonData['end'];
+    timeSlots = (jsonData["timeSlots"] as List).map((x) => TimeSlot().fromJson(x)).toList();
+    return this;
+  }
 }

@@ -152,7 +152,7 @@ class _SearchPageState extends State<SearchPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            item.firstname ?? '',
+                            "${item.firstname} ${item.lastname}",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize: 15,
@@ -172,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                               Expanded(
                                   flex: 6,
-                                  child: Text("34 rue dcssdf qsdqs 93843 AZqskswd")
+                                  child: Text("${item.address!.address1}, ${item.address!.city}")
                               ),
                             ],
                           ),
@@ -225,7 +225,7 @@ class _SearchPageState extends State<SearchPage> {
         try{
           var response = await HairdresserApi().getListHairdresser(parameters);
           newItems = (response["data"]['items'] as List)
-              .map((x) => Hairdresser(firstname: x["name"]))
+              .map((x) => Hairdresser().fromJson(x))
           //.where((x) => x.firstname.toLowerCase().contains(search_text!))
               .toList();
         }on Exception catch (_) {
