@@ -1,11 +1,11 @@
 import 'package:customer/components/button/button.dart';
+import 'package:customer/presentation/screens/hairdresser/booking_page.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:customer/data/json/home_page_json.dart';
 import 'package:customer/data/models/hairdresser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:customer/data/models/product.dart';
-import 'package:customer/presentation/screens/bookings/booking_page.dart';
 
 class HairdresserProfil extends StatefulWidget {
   final Hairdresser currentHairdresser;
@@ -317,7 +317,14 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                   ),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(0,0,0,50),
-                      child: Button(text: "Réserver", callBack: ()=>{})
+                      child: Button(
+                        text: "Réserver",
+                        callBack: ()=>{
+                          Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                            return BookingPage();
+                          }),)
+                        }
+                      )
                   ),
                 ],
               ),
