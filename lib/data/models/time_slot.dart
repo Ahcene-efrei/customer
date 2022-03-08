@@ -1,15 +1,15 @@
 class TimeSlot{
   String? id;
-  String? start;
-  String? end;
+  String start;
+  String end;
   int? durationInMinutes;
   bool? available;
   bool? canMoveAtClientsHome;
 
   TimeSlot({
     this.id,
-    this.start,
-    this.end,
+    this.start = '',
+    this.end = '',
     this.durationInMinutes,
     this.available,
     this.canMoveAtClientsHome
@@ -26,7 +26,7 @@ class TimeSlot{
   }
 
   @override
-  String toString() => "Du " + this.start! + " au  " + this.end!;
+  String toString() => "Du " + this.start + " au  " + this.end;
 
 
 }

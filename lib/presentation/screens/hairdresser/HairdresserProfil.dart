@@ -114,7 +114,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                       Container(
                         width: size.width - 30,
                         child: Text(
-                          "qsdqs dqs d qsd qs d qs dqsd qsdqsd",
+                          "description coiffeur",
                           style: TextStyle(fontSize: 14, height: 1.3),
                         ),
                       )
@@ -321,7 +321,7 @@ class _HairdresserProfilState extends State<HairdresserProfil> {
                         text: "Réserver",
                         callBack: ()=>{
                           Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                            return BookingPage();
+                            return BookingPage(currentHairdresser: widget.currentHairdresser,);
                           }),)
                         }
                       )
