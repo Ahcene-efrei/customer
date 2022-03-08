@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Button extends StatelessWidget {
   final String text;
   final Function callBack;
-  const Button({Key? key, required this.textButton, required this.callBack}) : super(key: key);
+  const Button({Key? key, required this.text, required this.callBack}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
