@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Button extends StatelessWidget {
   final String text;
   final Function callBack;
-  const Button({Key? key, required this.text, required this.callBack}) : super(key: key);
+  const Button({Key? key, required this.textButton, required this.callBack}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,9 @@ class Button extends StatelessWidget {
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
-            "Continuer",
+            text,
             style: TextStyle(
               fontSize: 16,
               color: Colors.white
